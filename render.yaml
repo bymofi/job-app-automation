@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: job-app-automation
+    env: node
+    buildCommand: npm install
+    startCommand: node backend/server.js
+    envVars:
+      - key: PORT
+        value: 3002
+      - key: NODE_ENV
+        value: production
+    plan: free

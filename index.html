@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Automation</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --gray-color: #6c757d;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f6f9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+        
+        main {
+            padding: 2rem 0;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .job-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .job-card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .job-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .job-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .job-company {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .job-location {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .job-match {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--success-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .cv-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .cv-card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+        
+        .cv-filename {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .cv-type {
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .cv-level {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .settings-form {
+            max-width: 600px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--success-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .job-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .job-description {
+            line-height: 1.8;
+        }
+        
+        .match-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .match-score {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--success-color);
+        }
+        
+        .match-cv {
+            font-weight: 500;
+        }
+        
+        .gap-analysis {
+            margin-top: 1.5rem;
+        }
+        
+        .missing-skills {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .recommendations {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .cover-letter {
+            white-space: pre-line;
+            line-height: 1.8;
+            padding: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        
+        .application-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .application-list th, .application-list td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .application-list th {
+            background-color: #f4f6f9;
+            font-weight: 600;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-applied {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .status-pending {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .status-rejected {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            background-color: var(--success-color);
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transform: translateX(150%);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background-color: var(--danger-color);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .dashboard-stats, .job-list, .cv-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Job Application Automation</div>
+                <ul class="nav-links">
+                    <li><a href="#" data-page="dashboard">Dashboard</a></li>
+                    <li><a href="#" data-page="jobs">Jobs</a></li>
+                    <li><a href="#" data-page="cvs">CVs</a></li>
+                    <li><a href="#" data-page="applications">Applications</a></li>
+                    <li><a href="#" data-page="settings">Settings</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <!-- Dashboard Page -->
+            <div class="page" id="dashboard-page">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Dashboard</h2>
+                        <button id="run-now-btn" class="btn">Run Now</button>
+                    </div>
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="jobs-count">0</div>
+                            <div class="stat-label">Jobs Found</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="cvs-count">0</div>
+                            <div class="stat-label">CVs Available</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="applications-count">0</div>
+                            <div class="stat-label">Applications</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="auto-apply-status">Off</div>
+                            <div class="stat-label">Auto-Apply</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Jobs</h3>
+                            <a href="#" data-page="jobs" class="btn">View All</a>
+                        </div>
+                        <div id="recent-jobs" class="job-list">
+                            <!-- Jobs will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Jobs Page -->
+            <div class="page" id="jobs-page" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Jobs</h2>
+                        <button id="search-jobs-btn" class="btn">Search Jobs</button>
+                    </div>
+                    <div id="jobs-list" class="job-list">
+                        <!-- Jobs will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Job Detail View (initially hidden) -->
+                <div id="job-detail-view" class="card" style="display: none;">
+                    <div class="card-header">
+                        <h2 class="card-title" id="job-detail-title"></h2>
+                        <button id="back-to-jobs-btn" class="btn">Back to Jobs</button>
+                    </div>
+                    <div class="job-detail">
+                        <div>
+                            <h3 id="job-detail-company"></h3>
+                            <p id="job-detail-location"></p>
+                            <p><strong>Platform:</strong> <span id="job-detail-platform"></span></p>
+                            <p><strong>Posted:</strong> <span id="job-detail-date"></span></p>
+                        </div>
+                        
+                        <div>
+                            <h3>Job Description</h3>
+                            <div id="job-detail-description" class="job-description"></div>
+                        </div>
+                        
+                        <div>
+                            <h3>Best Match</h3>
+                            <div class="match-info">
+                                <div class="match-score" id="job-match-score">0%</div>
+                                <div class="match-cv" id="job-match-cv">No CV found</div>
+                            </div>
+                            <button id="view-gap-analysis-btn" class="btn">View Gap Analysis</button>
+                            <button id="generate-cover-letter-btn" class="btn">Generate Cover Letter</button>
+                            <button id="apply-btn" class="btn btn-success">Apply</button>
+                        </div>
+                        
+                        <!-- Gap Analysis (initially hidden) -->
+                        <div id="gap-analysis-section" class="gap-analysis" style="display: none;">
+                            <h3>Gap Analysis</h3>
+                            <p>The following skills are mentioned in the job description but may not be adequately represented in your CV:</p>
+                            <ul id="missing-skills" class="missing-skills">
+                                <!-- Missing skills will be loaded here -->
+                            </ul>
+                            <h4>Recommendations:</h4>
+                            <ul id="recommendations" class="recommendations">
+                                <!-- Recommendations will be loaded here -->
+                            </ul>
+                        </div>
+                        
+                        <!-- Cover Letter (initially hidden) -->
+                        <div id="cover-letter-section" style="display: none;">
+                            <h3>Cover Letter</h3>
+                            <div id="cover-letter-content" class="cover-letter">
+                                <!-- Cover letter will be loaded here -->
+                            </div>
+                            <button id="copy-cover-letter-btn" class="btn">Copy to Clipboard</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CVs Page -->
+            <div class="page" id="cvs-page" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">CVs</h2>
+                        <button id="upload-cv-btn" class="btn">Upload CV</button>
+                    </div>
+                    <div id="cvs-list" class="cv-list">
+                        <!-- CVs will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- CV Upload Form (initially hidden) -->
+                <div id="cv-upload-form" class="card" style="display: none;">
+                    <div class="card-header">
+                        <h2 class="card-title">Upload CV</h2>
+                        <button id="cancel-upload-btn" class="btn btn-danger">Cancel</button>
+                    </div>
+                    <form id="upload-form">
+                        <div class="form-group">
+                            <label for="cv-file">Select CV File (DOCX format)</label>
+                            <input type="file" id="cv-file" accept=".docx" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cv-type">CV Type</label>
+                            <select id="cv-type" required>
+                                <option value="">Select CV Type</option>
+                                <option value="Financial Analyst">Financial Analyst</option>
+                                <option value="Business Analyst">Business Analyst</option>
+                                <option value="Budget Analyst">Budget Analyst</option>
+                                <option value="ERP Business Analyst">ERP Business Analyst</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cv-level">Experience Level</label>
+                            <select id="cv-level" required>
+                                <option value="">Select Experience Level</option>
+                                <option value="Entry Level">Entry Level (I)</option>
+                                <option value="Mid Level">Mid Level (II)</option>
+                                <option value="Senior Level">Senior Level (III)</option>
+                                <option value="Expert Level">Expert Level (IV)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">Upload</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Applications Page -->
+            <div class="page" id="applications-page" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Applications</h2>
+                    </div>
+                    <table class="application-list">
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Company</th>
+                                <th>CV Used</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applications-list">
+                            <!-- Applications will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Settings Page -->
+            <div class="page" id="settings-page" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Settings</h2>
+                        <button id="save-settings-btn" class="btn btn-success">Save Settings</button>
+                    </div>
+                    <form id="settings-form" class="settings-form">
+                        <div class="form-group">
+                            <label for="keywords">Job Search Keywords (comma separated)</label>
+                            <input type="text" id="keywords" placeholder="Financial Analyst, Business Analyst, Budget Analyst">
+                        </div>
+                        <div class="form-group">
+                            <label for="locations">Locations (comma separated)</label>
+                            <input type="text" id="locations" placeholder="Canada, Remote">
+                        </div>
+                        <div class="form-group">
+                            <label for="platforms">Job Platforms (comma separated)</label>
+                            <input type="text" id="platforms" placeholder="Indeed, LinkedIn, Glassdoor">
+                        </div>
+                        <div class="form-group">
+                            <label for="auto-apply-threshold">Auto-Apply Threshold (0-100)</label>
+                            <input type="number" id="auto-apply-threshold" min="0" max="100" value="80">
+                        </div>
+                        <div class="form-group">
+                            <label for="auto-apply-toggle">Auto-Apply</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="auto-apply-toggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div class="loading" id="loading-indicator">
+                <div class="spinner"></div>
+                <p>Loading...</p>
+            </div>
+            
+            <!-- Notification -->
+            <div class="notification" id="notification">
+                Notification message
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        // Global state
+        const state = {
+            jobs: [],
+            cvs: [],
+            applications: [],
+            config: {
+                autoApplyEnabled: false,
+                autoApplyThreshold: 80,
+                keywords: ['Financial Analyst', 'Business Analyst', 'Budget Analyst', 'ERP Business Analyst'],
+                locations: ['Canada', 'Remote'],
+                platforms: ['Indeed', 'LinkedIn', 'Glassdoor']
+            },
+            currentJob: null,
+            currentJobMatch: null
+        };
+        
+        // DOM Elements
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const notification = document.getElementById('notification');
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set up navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = link.getAttribute('data-page');
+                    navigateToPage(pageId);
+                });
+            });
+            
+            // Load initial data
+            loadDashboard();
+            
+            // Set up event listeners
+            document.getElementById('run-now-btn').addEventListener('click', runJobSearch);
+            document.getElementById('search-jobs-btn').addEventListener('click', runJobSearch);
+            document.getElementById('back-to-jobs-btn').addEventListener('click', () => {
+                document.getElementById('job-detail-view').style.display = 'none';
+                document.getElementById('jobs-list').parentElement.style.display = 'block';
+            });
+            document.getElementById('view-gap-analysis-btn').addEventListener('click', viewGapAnalysis);
+            document.getElementById('generate-cover-letter-btn').addEventListener('click', generateCoverLetter);
+            document.getElementById('apply-btn').addEventListener('click', applyToJob);
+            document.getElementById('upload-cv-btn').addEventListener('click', () => {
+                document.getElementById('cv-upload-form').style.display = 'block';
+            });
+            document.getElementById('cancel-upload-btn').addEventListener('click', () => {
+                document.getElementById('cv-upload-form').style.display = 'none';
+            });
+            document.getElementById('upload-form').addEventListener('submit', uploadCV);
+            document.getElementById('save-settings-btn').addEventListener('click', saveSettings);
+            document.getElementById('copy-cover-letter-btn').addEventListener('click', copyCoverLetter);
+            
+            // Show dashboard by default
+            navigateToPage('dashboard');
+        });
+        
+        // Navigation
+        function navigateToPage(pageId) {
+            pages.forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            document.getElementById(`${pageId}-page`).style.display = 'block';
+            
+            // Load page data
+            switch(pageId) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'jobs':
+                    loadJobs();
+                    break;
+                case 'cvs':
+                    loadCVs();
+                    break;
+                case 'applications':
+                    loadApplications();
+                    break;
+                case 'settings':
+                    loadSettings();
+                    break;
+            }
+        }
+        
+        // API Functions
+        async function fetchAPI(endpoint, method = 'GET', data = null) {
+            showLoading(true);
+            
+            try {
+                const options = {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+                
+                if (data) {
+                    options.body = JSON.stringify(data);
+                }
+                
+                const response = await fetch(`/api/${endpoint}`, options);
+                
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                showNotification(error.message, true);
+                console.error(error);
+                return null;
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Dashboard
+        async function loadDashboard() {
+            try {
+                // Load counts
+                const [jobs, cvs, applications, config] = await Promise.all([
+                    fetchAPI('jobs'),
+                    fetchAPI('cvs'),
+                    fetchAPI('applications'),
+                    fetchAPI('config')
+                ]);
+                
+                // Update state
+                state.jobs = jobs || [];
+                state.cvs = cvs || [];
+                state.applications = applications || [];
+                state.config = config || state.config;
+                
+                // Update dashboard stats
+                document.getElementById('jobs-count').textContent = state.jobs.length;
+                document.getElementById('cvs-count').textContent = state.cvs.length;
+                document.getElementById('applications-count').textContent = state.applications.length;
+                document.getElementById('auto-apply-status').textContent = state.config.autoApplyEnabled ? 'On' : 'Off';
+                
+                // Load recent jobs
+                const recentJobs = state.jobs.slice(0, 4);
+                renderJobs(recentJobs, 'recent-jobs');
+            } catch (error) {
+                showNotification(error.message, true);
+            }
+        }
+        
+        // Jobs
+        async function loadJobs() {
+            try {
+                const jobs = await fetchAPI('jobs');
+                state.jobs = jobs || [];
+                renderJobs(state.jobs, 'jobs-list');
+            } catch (error) {
+                showNotification(error.message, true);
+            }
+        }
+        
+        function renderJobs(jobs, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (jobs.length === 0) {
+                container.innerHTML = '<p>No jobs found. Click "Search Jobs" to find new opportunities.</p>';
+                return;
+            }
+            
+            jobs.forEach(job => {
+                const jobCard = document.createElement('div');
+                jobCard.className = 'job-card';
+                jobCard.innerHTML = `
+                    <div class="job-title">${job.title}</div>
+                    <div class="job-company">${job.company}</div>
+                    <div class="job-location">${job.location}</div>
+                    <div class="job-match">${job.applied ? 'Applied' : 'New'}</div>
+                `;
+                
+                jobCard.addEventListener('click', () => viewJobDetails(job.id));
+                container.appendChild(jobCard);
+            });
+        }
+        
+        async function viewJobDetails(jobId) {
+            try {
+                const job = state.jobs.find(j => j.id === jobId);
+                if (!job) {
+                    throw new Error('Job not found');
+                }
+                
+                state.currentJob = job;
+                
+                // Get best matching CV
+                const matchResult = await fetchAPI(`match/${jobId}`);
+                state.currentJobMatch = matchResult;
+                
+                // Update UI
+                document.getElementById('job-detail-title').textContent = job.title;
+                document.getElementById('job-detail-company').textContent = job.company;
+                document.getElementById('job-detail-location').textContent = job.location;
+                document.getElementById('job-detail-platform').textContent = job.platform;
+                document.getElementById('job-detail-date').textContent = new Date(job.date).toLocaleDateString();
+                document.getElementById('job-detail-description').textContent = job.description;
+                
+                // Update match info
+                if (matchResult && matchResult.bestMatch) {
+                    document.getElementById('job-match-score').textContent = `${matchResult.bestMatch.score}%`;
+                    document.getElementById('job-match-cv').textContent = matchResult.bestMatch.cv.filename;
+                    
+                    // Enable/disable apply button based on whether job has been applied to
+                    const applyBtn = document.getElementById('apply-btn');
+                    if (job.applied) {
+                        applyBtn.textContent = 'Applied';
+                        applyBtn.disabled = true;
+                    } else {
+                        applyBtn.textContent = 'Apply';
+                        applyBtn.disabled = false;
+                    }
+                } else {
+                    document.getElementById('job-match-score').textContent = '0%';
+                    document.getElementById('job-match-cv').textContent = 'No CV found';
+                    document.getElementById('apply-btn').disabled = true;
+                }
+                
+                // Hide gap analysis and cover letter sections
+                document.getElementById('gap-analysis-section').style.display = 'none';
+                document.getElementById('cover-letter-section').style.display = 'none';
+                
+                // Show job detail view, hide jobs list
+                document.getElementById('jobs-list').parentElement.style.display = 'none';
+                document.getElementById('job-detail-view').style.display = 'block';
+            } catch (error) {
+                showNotification(error.message, true);
+            }
+        }
+        
+        async function viewGapAnalysis() {
+            try {
+                if (!state.currentJob || !state.currentJobMatch || !state.currentJobMatch.bestMatch) {
+                    throw new Error('No job or matching CV selected');
+                }
+                
+                const jobId = state.currentJob.id;
+                const cvId = state.currentJobMatch.bestMatch.cv.id;
+                
+                const gapAnalysis = await fetchAPI(`gap-analysis/${jobId}/${cvId}`);
+                
+                // Update UI
+                const missingSkillsList = document.getElementById('missing-skills');
+                missingSkillsList.innerHTML = '';
+                
+                if (gapAnalysis.missingSkills.length === 0) {
+                    missingSkillsList.innerHTML = '<li>No significant skill gaps found</li>';
+                } else {
+                    gapAnalysis.missingSkills.forEach(skill => {
+                        const li = document.createElement('li');
+                        li.textContent = skill;
+                        missingSkillsList.appendChild(li);
+                    });
+                }
+                
+                const recommendationsList = document.getElementById('recommendations');
+                recommendationsList.innerHTML = '';
+                
+                gapAnalysis.recommendations.forEach(recommendation => {
+                    const li = document.createElement('li');
+                    li.textContent = recommendation;
+                    recommendationsList.appendChild(li);
+                });
+                
+                // Show gap analysis section
+                document.getElementById('gap-analysis-section').style.display = 'block';
+                document.getElementById('cover-letter-section').style.display = 'none';
+            } catch (error) {
+                showNotification(error.message, true);
+            }
+        }
+        
+        async function generateCoverLetter() {
+            try {
+                if (!state.currentJob || !state.currentJobMatch || !state.currentJobMatch.bestMatch) {
+                    throw new Error('No job or matching CV selected');
+                }
+                
+                const jobId = state.currentJob.id;
+                const cvId = state.currentJobMatch.bestMatch.cv.id;
+                
+                const coverLetterResult = await fetchAPI(`cover-letter/${jobId}/${cvId}`);
+                
+                // Update UI
+                document.getElementById('cover-letter-content').textContent = coverLetterResult.coverLetter;
+                
+                // Show cover letter section
+                document.getElementById('cover-letter-section').style.display = 'block';
+                document.getElementById('gap-analysis-section').style.display = 'none';
+            } catch (error) {
+                showNotification(error.message, true);
+            }
+        }
+        
+        async function applyToJob() {
+            try {
+                if (!state.currentJob || !state.currentJobMatch || !state.currentJobMatch.bestMatch) {
+                    throw new Error('No job or matching CV selected');
+                }
+                
+                const jobId = state.currentJob.id;
+                const cvId = state.currentJobMatch.bestMatch.cv.id;
+                
+                const result = await fetchAPI('applications', 'POST', { jobId, cvId });
+                
+                if (result) {
+                    // Update job status
+                    state.currentJob.applied = true;
+                    
+                    // Update applications list
+                    state.applications.push(result);
+                    
+                    // Update UI
+                    const applyBtn = document.getElementById('apply-btn');
+                    applyBtn.textContent = 'Applied';
+                    applyBtn.disabled = true;
+                    
+                    showNotification('Application submitted successfully');
+                }
+            } catch (error) {
+                showNotification(error.message, true);
+            }
+        }
+        
+        async function runJobSearch() {
+            try {
+                const result = await fetchAPI('search', 'POST');
+                
+                if (result) {
+                    // Update jobs list with new jobs
+                    state.jobs = [...result.newJobs, ...state.jobs];
+                    
+                    // Update UI based on current page
+                    const currentPage = Array.from(pages).find(page => page.style.display !== 'none').id;
+                    
+                    if (currentPage === 'dashboard-page') {
+                        const recentJobs = state.jobs.slice(0, 4);
+                        renderJobs(recentJobs, 'recent-jobs');
+                        document.getElementById('jobs-count').textContent = state.jobs.length;
+                    } else if (currentPage === 'jobs-page') {
+                        renderJobs(state.jobs, 'jobs-list');
+                    }
+                    
+                    showNotification(`Found ${result.newJobs.length} new jobs`);
+                }
+            } catch (error) {
+                showNotification(error.message, true);
+            }
+        }
+        
+        // CVs
+        async function loadCVs() {
+            try {
+                const cvs = await fetchAPI('cvs');
+                state.cvs = cvs || [];
+                renderCVs();
+            } catch (error) {
+                showNotification(error.message, true);
+            }
+        }
+        
+        function renderCVs() {
+            const container = document.getElementById('cvs-list');
+            container.innerHTML = '';
+            
+            if (state.cvs.length === 0) {
+                container.innerHTML = '<p>No CVs found. Click "Upload CV" to add your CVs.</p>';
+                return;
+            }
+            
+            state.cvs.forEach(cv => {
+                const cvCard = document.createElement('div');
+                cvCard.className = 'cv-card';
+                cvCard.innerHTML = `
+                    <div class="cv-filename">${cv.filename}</div>
+                    <div class="cv-type">${cv.type}</div>
+                    <div class="cv-level">${cv.experienceLevel}</div>
+                    <div>Uploaded: ${new Date(cv.uploadDate).toLocaleDateString()}</div>
+                `;
+                container.appendChild(cvCard);
+            });
+        }
+        
+        async function uploadCV(e) {
+            e.preventDefault();
+            
+            // In this simplified version, we'll just simulate CV upload
+            // since we're not actually uploading files to the server
+            
+            const cvType = document.getElementById('cv-type').value;
+            const cvLevel = document.getElementById('cv-level').value;
+            
+            // Generate a filename based on type and level
+            let levelNum = 'I';
+            if (cvLevel === 'Mid Level') levelNum = 'II';
+            if (cvLevel === 'Senior Level') levelNum = 'III';
+            if (cvLevel === 'Expert Level') levelNum = 'IV';
+            
+            const filename = `${cvType.replace(' ', '_')}_${levelNum}.docx`;
+            
+            // Create a new CV object
+            const newCV = {
+                id: `cv-${Date.now()}`,
+                filename,
+                type: cvType,
+                experienceLevel: cvLevel,
+                uploadDate: new Date()
+            };
+            
+            // Add to state
+            state.cvs.push(newCV);
+            
+            // Update UI
+            renderCVs();
+            document.getElementById('cv-upload-form').style.display = 'none';
+            document.getElementById('upload-form').reset();
+            
+            showNotification('CV uploaded successfully');
+        }
+        
+        // Applications
+        async function loadApplications() {
+            try {
+                const applications = await fetchAPI('applications');
+                state.applications = applications || [];
+                renderApplications();
+            } catch (error) {
+                showNotification(error.message, true);
+            }
+        }
+        
+        function renderApplications() {
+            const container = document.getElementById('applications-list');
+            container.innerHTML = '';
+            
+            if (state.applications.length === 0) {
+                container.innerHTML = '<tr><td colspan="5">No applications found.</td></tr>';
+                return;
+            }
+            
+            state.applications.forEach(app => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${app.jobTitle}</td>
+                    <td>${app.company}</td>
+                    <td>${app.cvFilename}</td>
+                    <td>${new Date(app.date).toLocaleDateString()}</td>
+                    <td><span class="status-badge status-${app.status.toLowerCase()}">${app.status}</span></td>
+                `;
+                container.appendChild(row);
+            });
+        }
+        
+        // Settings
+        async function loadSettings() {
+            try {
+                const config = await fetchAPI('config');
+                state.config = config || state.config;
+                
+                // Update form
+                document.getElementById('keywords').value = state.config.keywords.join(', ');
+                document.getElementById('locations').value = state.config.locations.join(', ');
+                document.getElementById('platforms').value = state.config.platforms.join(', ');
+                document.getElementById('auto-apply-threshold').value = state.config.autoApplyThreshold;
+                document.getElementById('auto-apply-toggle').checked = state.config.autoApplyEnabled;
+            } catch (error) {
+                showNotification(error.message, true);
+            }
+        }
+        
+        async function saveSettings() {
+            try {
+                // Get form values
+                const keywords = document.getElementById('keywords').value.split(',').map(k => k.trim()).filter(k => k);
+                const locations = document.getElementById('locations').value.split(',').map(l => l.trim()).filter(l => l);
+                const platforms = document.getElementById('platforms').value.split(',').map(p => p.trim()).filter(p => p);
+                const autoApplyThreshold = parseInt(document.getElementById('auto-apply-threshold').value);
+                const autoApplyEnabled = document.getElementById('auto-apply-toggle').checked;
+                
+                // Update config
+                const updatedConfig = {
+                    keywords,
+                    locations,
+                    platforms,
+                    autoApplyThreshold,
+                    autoApplyEnabled
+                };
+                
+                // Save to API
+                const result = await fetchAPI('config', 'PUT', updatedConfig);
+                
+                if (result) {
+                    state.config = result;
+                    showNotification('Settings saved successfully');
+                }
+            } catch (error) {
+                showNotification(error.message, true);
+            }
+        }
+        
+        // Utility Functions
+        function showLoading(show) {
+            loadingIndicator.style.display = show ? 'block' : 'none';
+        }
+        
+        function showNotification(message, isError = false) {
+            notification.textContent = message;
+            notification.className = isError ? 'notification error' : 'notification';
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        function copyCoverLetter() {
+            const coverLetterText = document.getElementById('cover-letter-content').textContent;
+            navigator.clipboard.writeText(coverLetterText)
+                .then(() => showNotification('Cover letter copied to clipboard'))
+                .catch(err => showNotification('Failed to copy: ' + err, true));
+        }
+    </script>
+</body>
+</html>

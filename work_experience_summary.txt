@@ -1,0 +1,131 @@
+# Comprehensive Work Experience Summary
+
+## Independent Consultant (Jan 2024 - Present)
+*Note: This period needs to be added to all CVs as mentioned by the user*
+
+## General Electric (GE) / GE Vernova (Dec 2022 - Jan 2024)
+**Position:** Financial Analyst
+**Location:** La Prairie, QC, Canada
+
+**Key Responsibilities:**
+- Generated detailed financial reports, KPI analyses, and corporate reports for data-driven decision-making
+- Extracted financial data from ERP systems to identify trends and optimize processes
+- Contributed to securing $8.3 billion in Renewable Energy orders through financial analysis
+- Helped drive 24% revenue growth across Onshore Wind, Offshore Wind, and Grid sectors
+- Utilized advanced Excel capabilities (PowerPivot, XLOOKUP, Dynamic Array Functions, LAMBDA, PowerQuery)
+- Optimized inventory reporting and project financial analysis for Canadian and US intercompany projects
+- Implemented dependent dropdown lists to enhance data governance and ensure accuracy
+- Utilized VBA to connect Excel with SAP, automating workflows like project creation
+
+**Achievement:** Demonstrated impactful financial analysis and strategic contributions, resulting in a 24% revenue growth showcased in the last financial report.
+
+## Groupe Dimmo (Apr 2020 - Dec 2022)
+**Position:** Financial Business Analyst
+**Location:** Montreal, QC, Canada
+
+**Key Responsibilities:**
+- Optimized financial and operational processes by identifying inefficiencies in the mortgage system
+- Implemented data-driven solutions to improve accuracy, efficiency, and decision-making
+- Developed internal financial reporting systems by integrating data from QuickBooks, Excel, Wave, and Numbers
+- Eliminated data silos and ensured consistency across departments
+- Enhanced financial forecasting and performance analysis using Power BI, Power Pivot, and advanced Excel functions
+- Designed interactive dashboards and automated reporting tools for key financial metrics
+- Automated and digitized critical business functions (attendance tracking, sales performance analysis)
+- Led cross-functional collaboration with finance, operations, and IT teams
+- Developed cost-saving models and scenario analyses for executive planning
+
+**Achievement:** Saved $1 million by redesigning the mortgage system, enhancing operational efficiency, and refining loan evaluation processes.
+
+## Montreal College of Information Technology (Jan 2019 - Apr 2020)
+**Position:** Student
+**Location:** Montreal, QC, Canada
+
+**Key Skills Acquired:**
+- SQL Server and Microsoft BI tools for data management workflows and reporting solutions
+- ETL (Extract, Transform, Load) processes for efficient data integration and analysis
+- Power BI, PowerQuery, and PowerPivot with advanced DAX functions for data visualization
+- SQL query writing and optimization for database management and analysis
+- Big data and data science concepts focused on data collection and actionable insights
+- Applied BI tools in academic projects for process optimization
+- Demonstrated organizational and collaborative skills in team projects
+
+## Ministry of Finance - First Under Secretary (Apr 2015 - Jan 2019)
+**Position:** Financial Budget Analyst / ERP Business Analyst
+**Location:** Nasr City, QH, Egypt
+
+**Key Responsibilities:**
+- Developed and implemented a performance-based incentive system with Oracle EBS
+- Automated tax revenue calculations by types and locations, as well as officers' incentives
+- Implemented a national debt system using Oracle EBS to automate debt calculations
+- Provided support and maintenance for Oracle EBS and other financial applications
+- Troubleshot complex incidents and developed new features to enhance functionality
+- Configured systems to align with evolving business processes
+- Investigated issues, identified root causes, and implemented solutions
+- Collaborated with stakeholders across the organization
+- Identified areas for improvement in financial applications and business processes
+- Collected and translated business requirements into system configurations
+- Supported audit cycles with compliance evidence
+
+**Achievement:** Increased Egyptian tax revenues by 117% in one year.
+
+## Ministry of Finance - Budget Automation Unit (Mar 2005 - Jan 2019)
+**Position:** Financial Systems Analyst / ERP Business Analyst
+**Location:** Nasr City, QH, Egypt
+
+**Key Responsibilities:**
+- Provided daily support for Oracle Financial Applications to over 3,000 accounting units
+- Troubleshot issues, resolved incidents, and trained users on ERP systems
+- Configured applications and developed new features to enhance functionality
+- Investigated issues, identified root causes, and implemented recommendations
+- Collaborated with Business System Owners to analyze information needs
+- Gathered functional requirements and translated them into system configurations
+- Conducted quality assurance, system integration, and user acceptance testing
+- Managed implementation of Oracle projects for approximately 3,000 accounting units
+- Acted as liaison between Finance, Operations, Technology teams, and Vendors
+- Identified areas for improvement in financial applications and business processes
+- Applied IT troubleshooting skills and technical knowledge of PL/SQL
+
+**Achievement:** Led the successful implementation of Oracle Financials for over 3,000 accounting units, ensuring a smooth transition for 15,000 users.
+
+## Ministry of Finance (Jun 2001 - Mar 2005)
+**Position:** Financial Budget Analyst
+**Location:** Nasr City, QH, Egypt
+
+**Key Responsibilities:**
+- Prepared and managed budgets for key entities within the Ministry of Finance
+- Conducted detailed budget preparation and analysis aligned with national fiscal policies
+- Developed comprehensive budget plans with expenditure forecasts and revenue projections
+- Utilized Excel tools (Pivot Tables, INDEX/MATCH, VLOOKUP, Macros) for budget preparation
+- Created error-proof budgeting models using dropdown lists, data validation, and scenarios
+- Analyzed variances, identified cost-saving opportunities, and provided financial insights
+- Automated repetitive tasks in budget reporting processes
+- Improved data accuracy through Excel automation
+
+**Achievement:** Selected to establish the Budget Automation Unit.
+
+## Education
+
+- **McGill University** (Jan 2022 - Jun 2022)
+  Certification, Business Analytics
+
+- **Montreal College of Information Technology** (Jan 2019 - Apr 2020)
+  Certification, Diploma in Business Intelligence and Visualization
+
+- **ESLSCA et Université Française d'Égypte** (Sep 2014 - Jun 2015)
+  Postgraduate Diploma in Management
+
+- **Ain Shams University** (Sep 1999 - May 2001)
+  Postgraduate Diploma in Accounting / Taxation
+
+- **Mansoura University** (Sep 1994 - May 1998)
+  Bachelor's, Accounting
+
+## Technical Skills
+
+- **Business Analysis:** Requirements gathering, process mapping, data-driven decision-making
+- **Data Integration and Business Intelligence:** Power BI, SSIS, DQS, MDS
+- **Enterprise Software:** Oracle EBS, SAP, QuickBooks Online
+- **Microsoft Applications:** Excel (PowerPivot, XLOOKUP, Dynamic Array Functions, LAMBDA, PowerQuery), Office, Visio, Project
+- **Programming:** SQL, PL/SQL, VBA
+- **Financial Analysis:** Budgeting, forecasting, KPI development, financial reporting
+- **Process Automation:** Workflow optimization, system integration
