@@ -1,6 +1,12 @@
-// Update the API endpoints to match Firebase Functions
+// Firebase-compatible app.js for the job application automation system
 document.addEventListener('DOMContentLoaded', function() {
-    // API base URL - update to point to Firebase Functions
+    // Initialize Firebase
+    const firebaseConfig = {
+        projectId: "job-app-automation-76697453",
+        // Other Firebase config properties will be automatically added during deployment
+    };
+    
+    // API base URL - will point to Firebase Functions
     const API_BASE_URL = '/api';
     
     // Navigation

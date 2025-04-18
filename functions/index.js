@@ -1,9 +1,8 @@
 const functions = require('firebase-functions');
-const admin = require('firebase-admin');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const path = require('path');
+const admin = require('firebase-admin');
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -16,8 +15,72 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(bodyParser.json());
 
-// Simple data structure for initial setup
-const generateSampleJobs = () => {
+// Simple in-memory data storage for initial setup
+// This will be replaced with Firestore in production
+let initialDataLoaded = false;
+
+// Load initial data
+async function loadInitialData() {
+  if (initialDataLoaded) return;
+  
+  try {
+    // Check if we already have data
+    const jobsSnapshot = await db.collection('jobs').limit(1).get();
+    if (!jobsSnapshot.empty) {
+      console.log('Data already exists in Firestore');
+      initialDataLoaded = true;
+      return;
+    }
+    
+    // Load CVs
+    const cvFiles = [
+      { 
+        id: 'cv-1',
+        filename: 'Bassem Gebraeel -Long.txt',
+        type: 'Financial Analyst',
+        experienceLevel: 'Senior Level',
+        uploadDate: new Date().toISOString()
+      },
+      {
+        id: 'cv-2',
+        filename: 'Bassem Gebraeel FBA.txt',
+        type: 'Business Analyst',
+        experienceLevel: 'Mid Level',
+        uploadDate: new Date().toISOString()
+      }
+    ];
+    
+    // Add CVs to Firestore
+    const batch = db.batch();
+    cvFiles.forEach(cv => {
+      const cvRef = db.collection('cvs').doc(cv.id);
+      batch.set(cvRef, cv);
+    });
+    
+    // Add default config
+    const configRef = db.collection('config').doc('default');
+    batch.set(configRef, {
+      autoApplyEnabled: false,
+      autoApplyThreshold: 80,
+      keywords: ['Financial Analyst', 'Business Analyst', 'Budget Analyst', 'ERP Business Analyst'],
+      locations: ['Canada', 'Remote'],
+      platforms: ['Indeed', 'LinkedIn']
+    });
+    
+    await batch.commit();
+    
+    // Generate sample jobs
+    await generateSampleJobs();
+    
+    initialDataLoaded = true;
+    console.log('Initial data loaded into Firestore');
+  } catch (error) {
+    console.error('Error loading initial data:', error);
+  }
+}
+
+// Generate sample jobs for testing
+async function generateSampleJobs() {
   const companies = [
     'CIBC', 'Royal Bank of Canada', 'TD Bank', 'BMO', 'Scotiabank',
     'McKinsey', 'Deloitte', 'KPMG', 'EY', 'PwC',
@@ -37,9 +100,9 @@ const generateSampleJobs = () => {
   const locations = ['Toronto, Canada', 'Vancouver, Canada', 'Montreal, Canada', 'Remote'];
   const platforms = ['Indeed', 'LinkedIn', 'Glassdoor'];
   
-  const jobs = [];
-  
   // Generate 10 sample jobs
+  const batch = db.batch();
+  
   for (let i = 0; i < 10; i++) {
     const jobType = jobTypes[Math.floor(Math.random() * jobTypes.length)];
     const company = companies[Math.floor(Math.random() * companies.length)];
@@ -48,8 +111,11 @@ const generateSampleJobs = () => {
     const location = locations[Math.floor(Math.random() * locations.length)];
     const platform = platforms[Math.floor(Math.random() * platforms.length)];
     
-    jobs.push({
-      id: `job-${Date.now()}-${i}`,
+    const jobId = `job-${Date.now()}-${i}`;
+    const jobRef = db.collection('jobs').doc(jobId);
+    
+    batch.set(jobRef, {
+      id: jobId,
       title: jobType,
       company,
       location,
@@ -61,50 +127,15 @@ const generateSampleJobs = () => {
     });
   }
   
-  return jobs;
-};
+  await batch.commit();
+  console.log('Sample jobs generated');
+}
 
-// Initialize Firestore with sample data
-const initializeFirestore = async () => {
-  try {
-    // Check if jobs collection exists and has documents
-    const jobsSnapshot = await db.collection('jobs').limit(1).get();
-    
-    if (jobsSnapshot.empty) {
-      // Generate sample jobs
-      const sampleJobs = generateSampleJobs();
-      
-      // Add jobs to Firestore
-      const batch = db.batch();
-      sampleJobs.forEach(job => {
-        const jobRef = db.collection('jobs').doc(job.id);
-        batch.set(jobRef, job);
-      });
-      
-      await batch.commit();
-      console.log('Sample jobs added to Firestore');
-    }
-    
-    // Initialize config if it doesn't exist
-    const configSnapshot = await db.collection('config').doc('settings').get();
-    
-    if (!configSnapshot.exists) {
-      await db.collection('config').doc('settings').set({
-        autoApplyEnabled: false,
-        autoApplyThreshold: 80,
-        keywords: ['Financial Analyst', 'Business Analyst', 'Budget Analyst', 'ERP Business Analyst'],
-        locations: ['Canada', 'Remote'],
-        platforms: ['Indeed', 'LinkedIn']
-      });
-      console.log('Config initialized in Firestore');
-    }
-  } catch (error) {
-    console.error('Error initializing Firestore:', error);
-  }
-};
-
-// Call initialization function
-initializeFirestore();
+// Ensure data is loaded before handling requests
+app.use(async (req, res, next) => {
+  await loadInitialData();
+  next();
+});
 
 // API Routes
 // Get all jobs
@@ -119,7 +150,8 @@ app.get('/jobs', async (req, res) => {
     
     res.json(jobs);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching jobs:', error);
+    res.status(500).json({ error: 'Failed to fetch jobs' });
   }
 });
 
@@ -134,7 +166,8 @@ app.get('/jobs/:id', async (req, res) => {
     
     res.json(jobDoc.data());
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching job:', error);
+    res.status(500).json({ error: 'Failed to fetch job' });
   }
 });
 
@@ -150,7 +183,8 @@ app.get('/cvs', async (req, res) => {
     
     res.json(cvs);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching CVs:', error);
+    res.status(500).json({ error: 'Failed to fetch CVs' });
   }
 });
 
@@ -165,7 +199,8 @@ app.get('/cvs/:id', async (req, res) => {
     
     res.json(cvDoc.data());
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching CV:', error);
+    res.status(500).json({ error: 'Failed to fetch CV' });
   }
 });
 
@@ -181,7 +216,8 @@ app.get('/applications', async (req, res) => {
     
     res.json(applications);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching applications:', error);
+    res.status(500).json({ error: 'Failed to fetch applications' });
   }
 });
 
@@ -202,8 +238,9 @@ app.post('/applications', async (req, res) => {
     const cv = cvDoc.data();
     
     // Create application
+    const applicationId = `app-${Date.now()}`;
     const application = {
-      id: `app-${Date.now()}`,
+      id: applicationId,
       jobId,
       jobTitle: job.title,
       company: job.company,
@@ -214,42 +251,44 @@ app.post('/applications', async (req, res) => {
     };
     
     // Add application to Firestore
-    await db.collection('applications').doc(application.id).set(application);
+    await db.collection('applications').doc(applicationId).set(application);
     
     // Mark job as applied
     await db.collection('jobs').doc(jobId).update({ applied: true });
     
     res.status(201).json(application);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error creating application:', error);
+    res.status(500).json({ error: 'Failed to create application' });
   }
 });
 
 // Get configuration
 app.get('/config', async (req, res) => {
   try {
-    const configDoc = await db.collection('config').doc('settings').get();
+    const configDoc = await db.collection('config').doc('default').get();
     
     if (!configDoc.exists) {
-      return res.status(404).json({ message: 'Config not found' });
+      return res.status(404).json({ message: 'Configuration not found' });
     }
     
     res.json(configDoc.data());
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching configuration:', error);
+    res.status(500).json({ error: 'Failed to fetch configuration' });
   }
 });
 
 // Update configuration
 app.put('/config', async (req, res) => {
   try {
-    await db.collection('config').doc('settings').update(req.body);
+    await db.collection('config').doc('default').update(req.body);
     
-    const updatedConfigDoc = await db.collection('config').doc('settings').get();
-    
+    const updatedConfigDoc = await db.collection('config').doc('default').get();
     res.json(updatedConfigDoc.data());
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error updating configuration:', error);
+    res.status(500).json({ error: 'Failed to update configuration' });
   }
 });
 
@@ -303,7 +342,8 @@ app.get('/match/:jobId', async (req, res) => {
       bestMatch: matches[0]
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error finding matches:', error);
+    res.status(500).json({ error: 'Failed to find matches' });
   }
 });
 
@@ -342,7 +382,8 @@ Bassem Gebraeel
       coverLetter
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error generating cover letter:', error);
+    res.status(500).json({ error: 'Failed to generate cover letter' });
   }
 });
 
@@ -382,31 +423,40 @@ app.get('/gap-analysis/:jobId/:cvId', async (req, res) => {
       recommendations
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error performing gap analysis:', error);
+    res.status(500).json({ error: 'Failed to perform gap analysis' });
   }
 });
 
 // Run job search (simulated)
 app.post('/search', async (req, res) => {
   try {
-    // Generate new sample jobs
-    const newJobs = generateSampleJobs().slice(0, 5);
+    // Count existing jobs
+    const jobsSnapshot = await db.collection('jobs').get();
+    const oldCount = jobsSnapshot.size;
     
-    // Add new jobs to Firestore
-    const batch = db.batch();
-    newJobs.forEach(job => {
-      const jobRef = db.collection('jobs').doc(job.id);
-      batch.set(jobRef, job);
+    // Generate new jobs
+    await generateSampleJobs();
+    
+    // Count new jobs
+    const newJobsSnapshot = await db.collection('jobs').get();
+    const newCount = newJobsSnapshot.size - oldCount;
+    
+    // Get the new jobs
+    const newJobsQuery = await db.collection('jobs').orderBy('date', 'desc').limit(newCount).get();
+    const newJobs = [];
+    
+    newJobsQuery.forEach(doc => {
+      newJobs.push(doc.data());
     });
     
-    await batch.commit();
-    
     res.json({
-      message: `Found ${newJobs.length} new jobs`,
+      message: `Found ${newCount} new jobs`,
       newJobs
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error running job search:', error);
+    res.status(500).json({ error: 'Failed to run job search' });
   }
 });
 
@@ -415,5 +465,5 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
-// Export the API as a Firebase Function
+// Export the Express app as a Firebase Function
 exports.api = functions.https.onRequest(app);
